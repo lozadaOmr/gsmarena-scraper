@@ -1,0 +1,2 @@
+#!/bin/bash
+grep -vwE "(makers|privacy|tipus|compare|tools|hiring|glossary|faq|netword-bands|contac|review|news|blog|pictures|test|phones|reviews|newscomm|update|reviewcomm|3D view|3d-spin|piccmp|vidcmp|whyregister)" urls.csv

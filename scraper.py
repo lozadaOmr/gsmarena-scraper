@@ -7,7 +7,7 @@ import csv
 reload(sys)
 sys.setdefaultencoding("utf8")
 
-with open('urls.csv', 'rb') as f:
+with open('filtered_urls.csv', 'rb') as f:
     rows = csv.reader(f)
     urls = [r[0] for r in rows]
     urls = urls[1:]
@@ -27,11 +27,13 @@ with open('sample.csv', 'w') as csvfile:
             'Browser', 'Talk time', 'Stand-by', 'Music play', 'Price group', 
             'Colors', 'Battery life', 'Camera', 'Audio quality', 'Performance', 
             'Display', 'Phonebook', 'Call records', 'Games', 'SAR EU', 
-            'SAR US', 'Protection', 'Keyboard', 'NFC']
+            'SAR US', 'Protection', 'Keyboard', 'NFC', 'Build', 'Alarm', 
+            'Clock', 'Languages']
     writer = csv.DictWriter(
         csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
     writer.writeheader()
     for u in urls:
+        print 'url', u
         r = requests.get(u, headers=utils.merge(DEFAULT_HEADERS, {}))
         soup = BeautifulSoup(r.text, 'lxml')
         data = {}
@@ -49,6 +51,7 @@ with open('sample.csv', 'w') as csvfile:
             data.update(dict(zip(h, c)))
         title = soup.select('.specs-phone-name-title')[0].get_text()
         data.update({'Model': title})
-        data['Technology'] = str(data['Technology']).strip('<a class="link-network-detail collapse" href="#"></a>')
+        if 'Technology' in data:
+            data['Technology'] = str(data['Technology']).strip('<a class="link-network-detail collapse" href="#"></a>')
         print data
         writer.writerow(data)

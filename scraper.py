@@ -1,4 +1,6 @@
 import sys
+import socks
+import socket
 from bs4 import BeautifulSoup
 import requests
 import utils
@@ -6,6 +8,12 @@ import csv
 
 reload(sys)
 sys.setdefaultencoding("utf8")
+
+socks.setdefaultproxy(proxy_type=socks.PROXY_TYPE_SOCKS5,
+        addr='127.0.0.1', port=9050)
+
+socket.socket = socks.socksocket
+
 
 with open('filtered_urls.csv', 'rb') as f:
     rows = csv.reader(f)
@@ -35,6 +43,8 @@ with open('sample.csv', 'w') as csvfile:
     for u in urls:
         print 'url', u
         r = requests.get(u, headers=utils.merge(DEFAULT_HEADERS, {}))
+        print 'r.text'
+        print r.text
         soup = BeautifulSoup(r.text, 'lxml')
         data = {}
         for t in soup.select('table'):

@@ -43,8 +43,6 @@ with open('sample.csv', 'w') as csvfile:
     for u in urls:
         print 'url', u
         r = requests.get(u, headers=utils.merge(DEFAULT_HEADERS, {}))
-        print 'r.text'
-        print r.text
         soup = BeautifulSoup(r.text, 'lxml')
         data = {}
         for t in soup.select('table'):

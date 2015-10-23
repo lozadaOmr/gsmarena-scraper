@@ -7,7 +7,7 @@ Scrapes data from GSMArena.
     $ sudo apt-get install tor
     $ tor &
     $ make setup
-    $ source venv/bin/activate
+    $ source env/bin/activate
     $ pip install -r requirements.txt
 
 ##Usage

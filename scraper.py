@@ -1,3 +1,4 @@
+import argparse
 import sys
 import socks
 import socket
@@ -5,20 +6,54 @@ from bs4 import BeautifulSoup
 import requests
 import utils
 import csv
+from google import search
 
 reload(sys)
 sys.setdefaultencoding("utf8")
+
+# [TODO] put another scraper type
+# Get parser type using argparse
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('-t', '--type',
+                    default='urls',
+                    choices=['urls', 'models'],
+                    help="""
+Type:
+    1. urls (default) - checks filtered_urls.csv for links. Should be a valid
+        gsmarena link. Format: link
+    2. model - checks filtered_models.csv for manufacturer + model. Searches
+        model to google to return valid gsmarena link.
+        Format: manufacturer,model
+                    """.strip())
+
+args = parser.parse_args()
+
+urls = []
+
+if args.type == 'urls':
+    with open('filtered_urls.csv', 'rb') as f:
+        rows = csv.reader(f)
+        urls = [r[0] for r in rows]
+        urls = urls[1:]
+elif args.type == 'models':
+    with open('filtered_models.csv', 'rb') as f:
+        rows = csv.DictReader(f)
+        for row in rows:
+            # form keyword
+            keyword = "gsmarena %s %s" % (row['manufacturer'], row['model'])
+
+            # google returns an iterator
+            query = search(keyword, num=1, stop=1)
+
+            for url in query:
+                if "www.gsmarena.com" in url:
+                    urls.append(url)
+                break
 
 socks.setdefaultproxy(proxy_type=socks.PROXY_TYPE_SOCKS5,
         addr='127.0.0.1', port=9050)
 
 socket.socket = socks.socksocket
-
-
-with open('filtered_urls.csv', 'rb') as f:
-    rows = csv.reader(f)
-    urls = [r[0] for r in rows]
-    urls = urls[1:]
 
 DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
@@ -26,16 +61,16 @@ DEFAULT_HEADERS = {
 
 with open('sample.csv', 'w') as csvfile:
     fieldnames = ['Model', 'GPRS', '2G bands', 'Speed', '3G bands', 'EDGE',
-            'Technology', 'Status', 'SIM', '4G bands', 'Announced', 
+            'Technology', 'Status', 'SIM', '4G bands', 'Announced',
             'Dimensions', 'Weight', 'Resolution', 'Multitouch', 'Type', 'Size',
-            'Chipset', 'OS', 'CPU', 'GPU', 'Internal', 'Card slot', 
-            'Secondary', 'Video', 'Primary', 'Features', 'Loudspeaker', 
-            '3.5mm jack', 'Alert types', 'WLAN', 'USB', 'Infrared port', 
-            'Bluetooth', 'Radio', 'GPS', 'Messaging', 'Sensors', 'Java', 
-            'Browser', 'Talk time', 'Stand-by', 'Music play', 'Price group', 
-            'Colors', 'Battery life', 'Camera', 'Audio quality', 'Performance', 
-            'Display', 'Phonebook', 'Call records', 'Games', 'SAR EU', 
-            'SAR US', 'Protection', 'Keyboard', 'NFC', 'Build', 'Alarm', 
+            'Chipset', 'OS', 'CPU', 'GPU', 'Internal', 'Card slot',
+            'Secondary', 'Video', 'Primary', 'Features', 'Loudspeaker',
+            '3.5mm jack', 'Alert types', 'WLAN', 'USB', 'Infrared port',
+            'Bluetooth', 'Radio', 'GPS', 'Messaging', 'Sensors', 'Java',
+            'Browser', 'Talk time', 'Stand-by', 'Music play', 'Price group',
+            'Colors', 'Battery life', 'Camera', 'Audio quality', 'Performance',
+            'Display', 'Phonebook', 'Call records', 'Games', 'SAR EU',
+            'SAR US', 'Protection', 'Keyboard', 'NFC', 'Build', 'Alarm',
             'Clock', 'Languages']
     writer = csv.DictWriter(
         csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)

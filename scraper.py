@@ -60,6 +60,7 @@ class Device(Base):
     __tablename__ = 'device'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    tac = Column(String(255))
     manufacturer = Column(String(255))
     model = Column(String(255))
     meta = Column(Text)

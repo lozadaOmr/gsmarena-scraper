@@ -48,6 +48,7 @@ class Device(Base):
     __tablename__ = 'device'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    tac = Column(String(255))
     manufacturer = Column(String(255))
     model = Column(String(255))
     meta = Column(Text)
@@ -56,8 +57,8 @@ class Device(Base):
 Base.metadata.create_all(engine)
 
 # set csv fieldnames
-fieldnames = ['manufacturer', 'model', 'wap', 'messaging', 'gprs', 'edge',
-    '2g', '3g', '4g', 'wifi', 'bluetooth', 'gps', 'display_type',
+fieldnames = ['tac', 'manufacturer', 'model', 'wap', 'messaging', 'gprs',
+    'edge', '2g', '3g', '4g', 'wifi', 'bluetooth', 'gps', 'display_type',
     'display_size', 'camera', 'secondary_camera', 'video', 'dimensions',
     'weight', 'memory_card', 'infrared', 'usb', 'cpu', 'java']
 
@@ -72,11 +73,13 @@ with open("results_%s.csv" % args.database, 'wb') as fp:
 
         if not item.url or item.url == "n/a":
             data = {
+                'tac': item.tac,
                 'manufacturer': item.manufacturer,
                 'model': item.model,
             }
         else:
             data = {
+                'tac': item.tac,
                 'manufacturer': item.manufacturer,
                 'model': item.model,
                 'wap': '',

@@ -82,7 +82,7 @@ with open("results_%s.csv" % args.database, 'wb') as fp:
                 'tac': item.tac,
                 'manufacturer': item.manufacturer,
                 'model': item.model,
-                'wap': '',
+                'wap': 1 if 'wap' in meta.get('Browser').lower() else 0,
                 'messaging': 1 if meta.get('Messaging') else 0,
                 'gprs': 1 if meta.get('GPRS') else 0,
                 'edge': 1 if meta.get('EDGE') else 0,

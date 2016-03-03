@@ -45,10 +45,15 @@ elif args.type == 'models':
             # google returns an iterator
             query = search(keyword, num=1, stop=1)
 
-            for url in query:
-                if "www.gsmarena.com" in url:
-                    urls.append(url)
-                break
+            print "google search: %s" % keyword
+
+            try:
+                for url in query:
+                    if "www.gsmarena.com" in url:
+                        urls.append(url)
+                    break
+            except Exception, e:
+                print "warning:", e
 
 socks.setdefaultproxy(proxy_type=socks.PROXY_TYPE_SOCKS5,
         addr='127.0.0.1', port=9050)
@@ -92,7 +97,11 @@ with open('sample.csv', 'w') as csvfile:
             #h = [e.contents[0] for e in t.select('.ttl > a')]
             #c = [str(e.contents[0]).encode('utf-8') for e in t.select('.nfo')]
             data.update(dict(zip(h, c)))
-        title = soup.select('.specs-phone-name-title')[0].get_text()
+        try:
+            title = soup.select('.specs-phone-name-title')[0].get_text()
+        except Exception, e:
+            print "warning: possible wrong link"
+            title = u
         data.update({'Model': title})
         if 'Technology' in data:
             data['Technology'] = str(data['Technology']).strip('<a class="link-network-detail collapse" href="#"></a>')

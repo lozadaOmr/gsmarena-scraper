@@ -19,6 +19,11 @@ from urllib import quote
 reload(sys)
 sys.setdefaultencoding("utf8")
 
+socks.setdefaultproxy(proxy_type=socks.PROXY_TYPE_SOCKS5,
+        addr='127.0.0.1', port=9050)
+
+socket.socket = socks.socksocket
+
 # [TODO] put another scraper type
 # Get parser type using argparse
 parser = argparse.ArgumentParser(description='Scrapes data from gsmarena.com')
@@ -118,11 +123,6 @@ for item in query.all():
     #         break
     # except Exception, e:
     #     print "warning:", e
-
-socks.setdefaultproxy(proxy_type=socks.PROXY_TYPE_SOCKS5,
-        addr='127.0.0.1', port=9050)
-
-socket.socket = socks.socksocket
 
 DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",

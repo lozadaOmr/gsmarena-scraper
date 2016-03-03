@@ -28,32 +28,39 @@ Type:
 
 args = parser.parse_args()
 
-urls = []
+if args.type == 'models':
+    with open('filtered_urls.csv', 'wb') as fw:
+        writer = csv.DictWriter(fw, fieldnames=['link'],
+                                quoting=csv.QUOTE_ALL)
+        writer.writeheader()
 
-if args.type == 'urls':
-    with open('filtered_urls.csv', 'rb') as f:
-        rows = csv.reader(f)
-        urls = [r[0] for r in rows]
-        urls = urls[1:]
-elif args.type == 'models':
-    with open('filtered_models.csv', 'rb') as f:
-        rows = csv.DictReader(f)
-        for row in rows:
-            # form keyword
-            keyword = "gsmarena %s %s" % (row['manufacturer'], row['model'])
+        with open('filtered_models.csv', 'rb') as fp:
+            rows = csv.DictReader(fp)
+            for row in rows:
+                manufacturer = row['manufacturer'].lower()
+                model = row['model'].lower()
 
-            # google returns an iterator
-            query = search(keyword, num=1, stop=1)
+                # form keyword
+                keyword = "gsmarena %s %s" % (manufacturer, model)
 
-            print "google search: %s" % keyword
+                # google returns an iterator
+                query = search(keyword, num=1, stop=1)
 
-            try:
-                for url in query:
-                    if "www.gsmarena.com" in url:
-                        urls.append(url)
-                    break
-            except Exception, e:
-                print "warning:", e
+                print "google search: %s" % keyword
+
+                try:
+                    for url in query:
+                        if ("www.gsmarena.com/%s" % manufacturer) in url:
+                            writer.writerow({'link': url})
+                        break
+                except Exception, e:
+                    print "warning:", e
+
+# always do this
+with open('filtered_urls.csv', 'rb') as f:
+    rows = csv.reader(f)
+    urls = [r[0] for r in rows]
+    urls = urls[1:]
 
 socks.setdefaultproxy(proxy_type=socks.PROXY_TYPE_SOCKS5,
         addr='127.0.0.1', port=9050)

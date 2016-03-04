@@ -10,7 +10,7 @@ import utils
 from bs4 import BeautifulSoup
 from google import search
 from json import dumps, loads, JSONEncoder, JSONDecoder
-from sqlalchemy import create_engine, Column, Integer, String, Text, or_
+from sqlalchemy import create_engine, Column, Integer, String, Text, and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from urllib import quote
@@ -148,7 +148,8 @@ class PythonObjectEncoder(JSONEncoder):
             return JSONEncoder.default(self, obj)
         return {'_python_object': str(obj)}
 
-query = session.query(Device).filter(Device.url != "n/a")
+query = session.query(Device).filter(
+    and_(Device.url != "n/a", Device.meta.is_(None)))
 
 for item in query.all():
     u = item.url
@@ -164,7 +165,7 @@ for item in query.all():
         for e in t.select('.nfo'):
             if e.contents:
                 c.append(e.contents[0])
-        section = t.select('th')[0].contents[0]
+        # section = t.select('th')[0].contents[0]
         #h = [e.contents[0] for e in t.select('.ttl > a')]
         #c = [str(e.contents[0]).encode('utf-8') for e in t.select('.nfo')]
         data.update(dict(zip(h, c)))

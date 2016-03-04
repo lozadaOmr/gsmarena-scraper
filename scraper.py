@@ -42,6 +42,14 @@ parser.add_argument('-P', '--port',
 parser.add_argument('-d', '--database',
                     default='test',
                     help="DB Name")
+parser.add_argument('-s', '--start',
+                    default=1,
+                    type=int,
+                    help="DB start index")
+parser.add_argument('-t', '--stop',
+                    default=-1,
+                    type=int,
+                    help="DB stop index")
 
 args = parser.parse_args()
 
@@ -73,8 +81,22 @@ class Device(Base):
 
 Base.metadata.create_all(engine)
 
+# process start and stop index
+start_idx = args.start
+
+if start_idx < 1:
+    start_idx = 1
+
+stop_idx = args.stop
+
+if stop_idx < 0:
+    stop_idx = session.query(Device).count()
+
 # fill all items without url
-query = session.query(Device).filter(Device.url.is_(None))
+query = session.query(Device).filter(
+    and_(Device.id >= start_idx,
+            Device.id <= stop_idx,
+            Device.url.is_(None)))
 
 for item in query.all():
     manufacturer = item.manufacturer.lower()
@@ -149,7 +171,11 @@ class PythonObjectEncoder(JSONEncoder):
         return {'_python_object': str(obj)}
 
 query = session.query(Device).filter(
-    and_(Device.url != "n/a", Device.meta.is_(None)))
+    and_(Device.id >= start_idx,
+            Device.id <= stop_idx,
+            Device.url != "n/a",
+            Device.url.isnot(None),
+            Device.meta.is_(None)))
 
 for item in query.all():
     u = item.url

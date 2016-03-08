@@ -29,3 +29,6 @@ Scrape data from a url and write it in a database row
 Compile data from the database row and put it in a csv file. Results can be found inside results/dbname.csv
 
     $ python compile.py [-h] [--scheme SCHEME] [-u USERNAME] [-w PASSWORD] [-H HOST] [-P PORT] [-d DATABASE]
+
+##Development
+Put your URL generator with validation in managers/urls.py while Scraper utils in managers/scrapers.py

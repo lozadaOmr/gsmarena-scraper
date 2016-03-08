@@ -7,3 +7,4 @@ google==1.9.1
 SQLAlchemy==1.0.12
 MySQL-python==1.2.5
 PySocks==1.5.6
+unicodecsv==0.14.1

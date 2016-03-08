@@ -18,7 +18,7 @@ Scrapes data from GSMArena.
     mysql> exit;
 
 ##Usage
-Insert rows from csv to the database table. File should be inside inputs/ with the following csv headers: tac,manufacturer,model
+Insert rows from csv to the database table. File should be inside inputs/dbname.csv with the following csv headers: tac,manufacturer,model
 
     $ python insert.py [-h] [--scheme SCHEME] [-u USERNAME] [-w PASSWORD] [-H HOST] [-P PORT] [-d DATABASE]
 
@@ -26,6 +26,6 @@ Scrape data from a url and write it in a database row
 
     $ python scrape.py [-h] [--scheme SCHEME] [-u USERNAME] [-w PASSWORD] [-H HOST] [-P PORT] [-d DATABASE] [-s START] [-t STOP]
 
-Compile data from the database row and put it in a csv file. Results can be found inside results/<dbname>.csv
+Compile data from the database row and put it in a csv file. Results can be found inside results/dbname.csv
 
     $ python compile.py [-h] [--scheme SCHEME] [-u USERNAME] [-w PASSWORD] [-H HOST] [-P PORT] [-d DATABASE]

@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from urlparse import urlparse
 from .const import DEFAULT_HEADERS, DEFAULT_FIELDNAMES
+from .utils import recursive_text_content
 
 
 class ScraperManager(object):
@@ -101,6 +102,48 @@ def mobosdata(url):
             value = False
         else:
             value = value[0]
+
+        data[name] = value
+
+    # [TODO] Create mapping to DEFAULT_FIELDNAMES
+    #!---
+
+    print "return: %s" % data
+
+    return data
+
+
+@scraper_manager.add_scraper_provider("http://www.phonearena.com")
+def phonearena(url):
+    # get response
+    print "phonearena search: %s" % url
+
+    response = requests.get(url, headers=DEFAULT_HEADERS)
+
+    if response.status_code != 200:
+        print "warning:", response.content
+        return
+
+    soup = BeautifulSoup(response.text, 'lxml')
+    data = {}
+
+    for row in soup.select('.s_specs_box > ul > li'):
+        headers = []
+
+        for header in row.select('strong.s_lv_1'):
+            if len(header.contents):
+                headers.append(header.contents[0])
+                break
+
+        name = ', '.join(recursive_text_content(headers)) \
+                   .strip(':')
+
+        # some tags can be empty
+        if not name:
+            continue
+
+        value = ', '.join(recursive_text_content(
+                                    row.select('> ul > li')))
 
         data[name] = value
 

@@ -98,7 +98,7 @@ if __name__ == "__main__":
     query = session.query(Device).filter(
         and_(Device.id >= start_idx,
                 Device.id <= stop_idx,
-                Device.meta.is_(None)))
+                Device.url.is_(None)))
 
     for item in query.all():
         manufacturer = item.manufacturer.lower()

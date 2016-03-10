@@ -78,7 +78,7 @@ def gsmarena(keyword):
         if not attrs:
             continue
 
-        href = attrs.get('href')
+        href = attrs.get('href').lower()
 
         if href and href.find("%s/%s" % (domain, manufacturer)) == 0:
             print "found: %s" % href
@@ -86,7 +86,7 @@ def gsmarena(keyword):
             return href
 
 
-@url_manager.add_url_provider('mobosdata', 2)
+@url_manager.add_url_provider('mobosdata', 3)
 def mobosdata(keyword):
     # check mobosdata search
     manufacturer = keyword.split()[0].lower()
@@ -112,7 +112,7 @@ def mobosdata(keyword):
         if not attrs:
             continue
 
-        href = attrs.get('href')
+        href = attrs.get('href').lower()
 
         if href and href.strip('/').find(manufacturer) == 0:
             url = "%s%s" % (domain, href)
@@ -120,3 +120,39 @@ def mobosdata(keyword):
             print "found: %s" % url
 
             return url
+
+
+@url_manager.add_url_provider('phonearena', 2)
+def phonearena(keyword):
+    # check bing search
+    manufacturer = keyword.split()[0].lower()
+
+    domain = "http://www.phonearena.com"
+    url = "http://www.bing.com/search?q={0}&go=Submit&qs=n&form=QBRE&pq={0}" \
+          "&sc=8-25&sp=-1&sk=&cvid=505D5E8D48744189BB96C5EC6FB91FB2".format(
+            quote("phonearena %s" % keyword))
+
+    # get response
+    print "bing search: phonearena %s" % keyword
+
+    response = requests.get(url, headers=DEFAULT_HEADERS)
+
+    if response.status_code != 200:
+        print "warning:", response.content
+        return
+
+    # check first item in the list
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    for link in soup.select('#b_results li h2 > a'):
+        attrs = link.__dict__.get('attrs')
+
+        if not attrs:
+            continue
+
+        href = attrs.get('href').lower()
+
+        if href and href.find("%s/phones/%s" % (domain, manufacturer)) == 0:
+            print "found: %s" % href
+
+            return href

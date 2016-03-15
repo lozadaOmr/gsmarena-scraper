@@ -20,6 +20,7 @@
 #   -t STOP, --stop STOP  Database stop index
 
 import argparse
+import json
 import sys
 import socks
 import socket
@@ -124,5 +125,5 @@ if __name__ == "__main__":
         meta = scraper_manager.get_scraped_data(item.url)
 
         if meta:
-            item.meta = dumps(meta, cls=utils.PythonObjectEncoder)
+            item.meta = json.dumps(meta, cls=utils.PythonObjectEncoder)
             session.commit()

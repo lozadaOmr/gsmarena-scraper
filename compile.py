@@ -23,6 +23,7 @@ from json import loads
 
 from db import DbEngine, Base, Device
 from managers.const import DEFAULT_FIELDNAMES
+from managers.cleaners import cleaner_manager
 
 
 # [TODO] put another scraper type
@@ -68,7 +69,6 @@ if __name__ == "__main__":
         query = session.query(Device).filter()
 
         for item in query.all():
-            meta = loads(item.meta) if item.meta else {}
 
             data = {
                 'tac': item.tac,
@@ -77,6 +77,10 @@ if __name__ == "__main__":
             }
 
             if item.url and item.meta:
-                data.update(loads(item.meta))
+                meta = cleaner_manager.clean(item.url, loads(item.meta))
+                data.update(meta)
 
-            writer.writerow(data)
+            try:
+                writer.writerow(data)
+            except:
+                continue

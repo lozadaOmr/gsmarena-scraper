@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from urlparse import urlparse
-from .const import DEFAULT_HEADERS, DEFAULT_FIELDNAMES
+from .const import DEFAULT_HEADERS
 from .utils import recursive_text_content
 
 

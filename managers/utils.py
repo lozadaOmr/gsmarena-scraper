@@ -30,6 +30,6 @@ def dict_mapper(data, maps=[]):
             key1 = [key1]
 
         all_data = filter(lambda x: x, [data.get(i, None) for i in key1])
-        new[key0] = ", ".join([str(i) for i in all_data])
+        new[key0] = ", ".join([unicode(i) for i in all_data])
 
     return new

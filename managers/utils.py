@@ -29,7 +29,7 @@ def dict_mapper(data, maps=[]):
         if type(key1) not in [list]:
             key1 = [key1]
 
-        all_data = filter(lambda x: str(x), [data.get(i, None) for i in key1])
-        new[key0] = ", ".join(all_data)
+        all_data = filter(lambda x: x, [data.get(i, None) for i in key1])
+        new[key0] = ", ".join([str(i) for i in all_data])
 
     return new

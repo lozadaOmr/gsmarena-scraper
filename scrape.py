@@ -110,6 +110,8 @@ if __name__ == "__main__":
             item.model.lower(),
         ))
 
+        url = url or "n/a"
+
         if url:
             item.url = url
             session.commit()

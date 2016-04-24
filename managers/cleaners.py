@@ -126,6 +126,7 @@ def phonearena(data):
         ("Colors", "Colors"),
         ("Battery life", "Capacity"),
         ("NFC", "Other"),
+        ("Manufacturer","manufacturer"),
     ]
 
     return dict_mapper(data, maps)

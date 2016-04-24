@@ -146,6 +146,8 @@ def phonearena(url):
                                     row.select('> ul > li')))
 
         data[name] = value
+        data['manufacturer'] = soup.select(
+                                    '.s_breadcrumbs > ul > li > a')[2].text
 
     # [TODO] Create mapping to DEFAULT_FIELDNAMES
     #!---

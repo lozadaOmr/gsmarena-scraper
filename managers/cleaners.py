@@ -126,6 +126,18 @@ def phonearena(data):
         ("Colors", "Colors"),
         ("Battery life", "Capacity"),
         ("NFC", "Other"),
+        ("Manufacturer","manufacturer"),
+    ]
+
+    return dict_mapper(data, maps)
+
+
+@cleaner_manager.add_cleaner_provider("http://imeidata.com")
+def imeidata(data):
+    maps = [
+        ("Model", "model")
+        ("Band", "band")
+        ("Manufacturer","manufacturer"),
     ]
 
     return dict_mapper(data, maps)

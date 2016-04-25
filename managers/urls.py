@@ -156,3 +156,39 @@ def phonearena(keyword):
             print "found: %s" % href
 
             return href
+
+
+@url_manager.add_url_provider('imeidata', 4)
+def imeidata(keyword):
+    # check imeidata search
+    manufacturer = keyword.split()[0].lower()
+
+    domain = "https://imeidata.net"
+    url = "http://www.bing.com/search?q={0}&go=Submit&qs=n&form=QBRE&pq={0}" \
+          "&sc=8-25&sp=-1&sk=&cvid=505D5E8D48744189BB96C5EC6FB91FB2".format(
+            quote("imeidata %s" % keyword))
+
+    # get response
+    print "bing search: imeidata %s" % keyword
+
+    response = requests.get(url, headers=DEFAULT_HEADERS)
+
+    if response.status_code != 200:
+        print "warning:", response.content
+        return
+
+    # check first item in the list
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    for link in soup.select('#b_results li h2 > a'):
+        attrs = link.__dict__.get('attrs')
+
+        if not attrs:
+            continue
+
+        href = attrs.get('href').lower()
+
+        if href and href.find("%s/phones/%s" % (domain, manufacturer)) == 0:
+            print "found: %s" % href
+
+            return href

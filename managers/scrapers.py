@@ -153,3 +153,35 @@ def phonearena(url):
     print "return: %s" % data
 
     return data
+
+
+@scraper_manager.add_scraper_provider("https://imeidata.net")
+def imeidata(url):
+    # get response
+    print "imeidata search: %s" % url
+
+    response = requests.get(url, headers=DEFAULT_HEADERS)
+
+    if response.status_code != 200:
+        print "warning:", response.content
+        return
+
+    soup = BeautifulSoup(response.text, 'lxml')
+    data = {}
+
+    for row in soup.select('.search-results-pane.active > .check-info > .field'):
+        if 'Manufacturer' in row.select('span')[0].text:
+            data['manufacturer'] = row.select('span')[1].text
+
+        if 'Model' in row.select('span')[0].text:
+            data['model'] = row.select('span')[1].text
+
+        if 'Band' in row.select('span')[0].text:
+            data['band'] = row.select('span')[1].text
+
+    # [TODO] Create mapping to DEFAULT_FIELDNAMES
+    #!---
+
+    print "return: %s" % data
+
+    return data

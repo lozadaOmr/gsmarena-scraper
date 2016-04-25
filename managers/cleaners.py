@@ -88,6 +88,7 @@ def mobosdata(data):
         ("Keyboard", "keyboard type"),
         ("NFC", "nfc"),
         ("Alarm", "alarm"),
+        ("Manufacturer","manufacturer"),
     ]
 
     return dict_mapper(data, maps)

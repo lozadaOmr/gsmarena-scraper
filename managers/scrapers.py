@@ -104,6 +104,8 @@ def mobosdata(url):
             value = value[0]
 
         data[name] = value
+        data['manufacturer'] = soup.select(
+                                    '.breadcrumbs > .pull-left > a + a')[0].text
 
     # [TODO] Create mapping to DEFAULT_FIELDNAMES
     #!---

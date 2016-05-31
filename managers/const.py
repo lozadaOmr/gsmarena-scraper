@@ -13,4 +13,4 @@ DEFAULT_FIELDNAMES = ['Model', 'GPRS', '2G bands', 'Speed', '3G bands', 'EDGE',
         'Colors', 'Battery life', 'Camera', 'Audio quality', 'Performance',
         'Display', 'Phonebook', 'Call records', 'Games', 'SAR EU',
         'SAR US', 'Protection', 'Keyboard', 'NFC', 'Build', 'Alarm',
-        'Clock', 'Languages']
+        'Clock', 'Languages','Device Type']

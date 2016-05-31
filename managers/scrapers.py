@@ -71,6 +71,10 @@ def gsmarena(url):
         data['Technology'] = str(data['Technology']).strip(
             '<a class="link-network-detail collapse" href="#"></a>')
 
+    device_type = soup.find('i', class_='icon-os')
+    if device_type:
+        data['Device Type'] = device_type.next_sibling
+
     print "return: %s" % data
 
     return data
